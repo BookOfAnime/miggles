@@ -188,7 +188,7 @@ export default function Scene() {
           <AnimatedText3D />
         </Suspense>
         <ambientLight intensity={0.5} />
-        <Environment files={'./desert.exr'} background />
+        <Environment files={'src/assets/desert.exr'} background />
         <spotLight position={[100, 100, 100]} angle={0.15} penumbra={1} intensity={1} castShadow />
         <pointLight position={[-100, -100, -100]} intensity={0.5} />
       </Canvas>
