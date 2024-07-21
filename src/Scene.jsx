@@ -1,6 +1,6 @@
 import React, { Suspense, useRef, useEffect } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
-import { Environment, Text3D, useMatcapTexture, PerspectiveCamera, OrbitControls, useGLTF } from '@react-three/drei';
+import { Text3D, useMatcapTexture, PerspectiveCamera, OrbitControls, useGLTF } from '@react-three/drei';
 import { useSpring, animated } from '@react-spring/three';
 import * as THREE from 'three';
 import gsap from 'gsap';
@@ -14,7 +14,15 @@ function Pyramid() {
 
 function Cat() {
   const { scene } = useGLTF('/cat.glb');
-  return <primitive scale={100} object={scene} position={[-10, 100, -75]} />;
+  const catRef = useRef();
+
+  useFrame((state, delta) => {
+    if (catRef.current) {
+      catRef.current.rotation.y += delta * 0.2;
+    }
+  });
+
+  return <primitive ref={catRef} scale={100} object={scene} position={[-0, 150, -100]} />;
 }
 
 function Floor() {
@@ -175,10 +183,9 @@ function Footer() {
     </div>
   );
 }
-
 export default function Scene() {
   return (
-    <div style={{ position: 'relative', width: '100%', height: '100vh' }}>
+    <div className="scene-container">
       <Canvas>
         <PerspectiveCamera makeDefault position={[0, 100, 600]} fov={50} />
         <OrbitControls />
@@ -187,8 +194,7 @@ export default function Scene() {
           <Cat />
           <AnimatedText3D />
         </Suspense>
-        <ambientLight intensity={0.5} />
-        <Environment files={'src/assets/desert.exr'} background />
+        <ambientLight intensity={3} />
         <spotLight position={[100, 100, 100]} angle={0.15} penumbra={1} intensity={1} castShadow />
         <pointLight position={[-100, -100, -100]} intensity={0.5} />
       </Canvas>
